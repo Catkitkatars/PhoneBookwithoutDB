@@ -1,30 +1,30 @@
 <?php
 
-use classes\DataHendler;
-
-require_once 'classes/DataHandler.php';
+require_once 'functions.php';
 
 
 $filePath = require_once 'filePath.php';
 $editData = '';
 
-$dataHandler = new DataHendler($filePath, $editData);
+$fp = fopen($filePath, 'r+');
+
+// var_dump($filePath);
+
+$rows = select($fp, []);
+?>
+
+<table>
+  <?php foreach ($rows as $row): ?>
+    <tr>
+      <td><?= htmlspecialchars($row['name']) ?></td>
+      <td><?= htmlspecialchars($row['phone']) ?></td>
+      <td><?= htmlspecialchars($row['email']) ?></td>
+      <td><?= htmlspecialchars($row['city']) ?></td>
+    </tr>
+  <?php endforeach ?>
+</table>
 
 
 
 
-var_dump($dataHandler->readFile());
 
-
-// $file = "/Users/mac/projects/lab/WEBwithoutBD/test.txt";
-
-// $fpReader = file($file);
-
-// // $data = 'not big test';
-
-// file_put_contents($file, $fpReader);
-
-
-
-// var_dump($fpReader);
-// // var_dump($handle);
