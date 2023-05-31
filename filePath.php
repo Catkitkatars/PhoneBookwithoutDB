@@ -1,2 +1,2 @@
 <?php 
-return "/Users/mac/projects/lab/WEBwithoutBD/test.txt";
+$filePath = "/Users/mac/projects/lab/WEBwithoutBD/test.txt";

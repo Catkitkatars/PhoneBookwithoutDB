@@ -1,16 +1,32 @@
 <?php
 
 require_once 'functions.php';
+require_once 'filePath.php';
 
 
-$filePath = require_once 'filePath.php';
-$editData = '';
 
 $fp = fopen($filePath, 'r+');
 
-// var_dump($filePath);
+
+
+
+deleteElem($fp, [
+    'name' => 'Василий',
+    'phone' => '88005553535',
+    'email' => 'test1@test.ru',
+    'city' => 'г.Москва'
+], $filePath);
+
 
 $rows = select($fp, []);
+
+// insert($filePath, [
+//     'name' => 'Egor',
+//     'phone' => '89005558423',
+//     'email' => 'egor@test4.com',
+//     'city' => 'Москва'
+// ]);
+
 ?>
 
 <table>
