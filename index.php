@@ -10,13 +10,24 @@ $fp = fopen($filePath, 'r+');
 
 
 
-deleteElem($fp, [
-    'name' => 'Василий',
-    'phone' => '88005553535',
-    'email' => 'test1@test.ru',
-    'city' => 'г.Москва'
-], $filePath);
+// // deleteElem($fp, [
+//     'name' => 'Василий',
+//     'phone' => '88005553535',
+//     'email' => 'test1@test.ru',
+//     'city' => 'г.Москва'
+// ], $filePath);
 
+update($fp, $filePath, [
+    'name' => 'Максим',
+    'phone' => '89028728700'
+], [
+    'name' => 'Артемий',
+    'phone' => '88004444044',
+    'email' => 'test3@test.ru',
+    'city' => 'г.Екатеринбург'
+]);
+
+// var_dump($update);
 
 $rows = select($fp, []);
 

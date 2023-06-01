@@ -6,6 +6,23 @@ function combine($row) {
     return $processedRow;
 }
 
+function update($file, $filePath, $newDate, $filter) {
+    $allData = select($file, []);
+
+    foreach($allData as $allDataKey => $allDataValue){
+        foreach($newDate as $newDateKey => $newDateValue) {
+            if(trim($allDataValue[$newDateKey]) == trim($filter[$newDateKey])) {
+                $allData[$allDataKey][$newDateKey] = $newDateValue;
+            }
+        }
+    }
+    
+    file_put_contents($filePath, '');
+    foreach($allData as $dataKey => $dataElem) {
+        file_put_contents($filePath, implode(' ', $dataElem), FILE_APPEND);
+    }
+}
+
 function deleteElem($file, array $filter, $filePath){
     $allData = select($file, []);
 
