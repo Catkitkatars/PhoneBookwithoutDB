@@ -1,14 +1,21 @@
 <?php
 
 class DataHandler {
-    public $fp;
-    public $filter;
+    private $fp;
+    private $fileName;
 
 
-
-    public function __construct($fp)
+    public function __construct($fileName)
     {
-        $this->fp = $fp;
+        $this->fileName = __DIR__ . '/' . $this->checkFileName($fileName);
+        $this->fp = fopen($this->fileName, 'r+');
+    }
+    
+    private function checkFileName(string $fileName):string {
+        if(!file_exists($fileName)){
+            throw new Exception("File in: " . __DIR__ .'/'. $fileName . " not found. Error in DataHandler.php/16");
+        }
+        return $fileName;
     }
 
     private function combine($row) {
@@ -39,14 +46,14 @@ class DataHandler {
         return $processedData;
     }
 
-    public function insert($filePath, $filter){
+    public function insert($filter){
         foreach($filter as $key => $value) {
             $value = trim($value);
         }
-        file_put_contents($filePath, ("\n" . implode(' ', $filter)), FILE_APPEND);
+        file_put_contents($this->fileName, ("\n" . implode(' ', $filter)), FILE_APPEND);
     }
 
-    public function delete($filePath, $filter) {
+    public function delete($filter) {
         $allData = select($this->fp, []);
 
         foreach($allData as $dataKey => $dataElem){
@@ -61,13 +68,13 @@ class DataHandler {
             }
         }
     
-        file_put_contents($filePath, '');
+        file_put_contents($this->fileName, '');
         foreach($allData as $dataKey => $dataElem) {
-            file_put_contents($filePath, implode(' ', $dataElem), FILE_APPEND);
+            file_put_contents($this->fileName, implode(' ', $dataElem), FILE_APPEND);
         }
     }
 
-    public function update($filePath, $newDate, $filter){
+    public function update($newDate, $filter){
         $allData = select($this->fp, []);
 
         foreach($allData as $allDataKey => $allDataValue){
@@ -78,9 +85,9 @@ class DataHandler {
             }
         }
         
-        file_put_contents($filePath, '');
+        file_put_contents($this->fileName, '');
         foreach($allData as $dataKey => $dataElem) {
-            file_put_contents($filePath, implode(' ', $dataElem), FILE_APPEND);
+            file_put_contents($this->fileName, implode(' ', $dataElem), FILE_APPEND);
         }
     }
 }

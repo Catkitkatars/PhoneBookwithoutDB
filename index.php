@@ -1,14 +1,26 @@
 <?php
 
 require_once 'functions.php';
-require_once 'filePath.php';
+require_once 'fileName.php';
 require_once 'DataHandler.php';
 
 
+// var_dump($fileName);
 
-$fp = fopen($filePath, 'r+');
 
-$dataHandler = new DataHandler($fp);
+// $dataHandler = new DataHandler('test.txt');
+
+
+try
+{
+  $dataHandler = new DataHandler('test');
+}
+catch (Exception $e)
+{
+  echo $e->getMessage();
+  die();
+}
+
 
 
 // Проверить работу методов, которые записаны в класс DataHandler
@@ -44,7 +56,8 @@ $dataHandler = new DataHandler($fp);
 //     'city' => 'Москва'
 // ]);
 
-// $rows = $dataHandler->select([]); // Done
+$rows = $dataHandler->select([]); // Done
+
 
 // $dataHandler->insert($filePath,[ // Done
 //     'name' => 'Egor',
