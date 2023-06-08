@@ -13,7 +13,7 @@ require_once 'DataHandler.php';
 
 try
 {
-  $dataHandler = new DataHandler('test');
+  $dataHandler = new DataHandler('test.txt');
 }
 catch (Exception $e)
 {
@@ -55,8 +55,34 @@ catch (Exception $e)
 //     'email' => 'egor@test4.com',
 //     'city' => 'Москва'
 // ]);
+try {
+  $rows = $dataHandler->select(
+    [
+    [
+      'name'=>'Egor', 
+      'operator' => 'and', 
+      'city' => 'Москва'
+    ],
+    [
+      'name'=>'Семён', 
+      'operator' => 'or', 
+      'city' => 'Екатеринбург' 
+    ]
+  ]); 
+} 
+catch (Exception $e) 
+{
+  echo $e->getMessage();
+  die();
+}
 
-$rows = $dataHandler->select([]); // Done
+
+// var_dump($rows);
+
+// $arr = ['name'=>'Egor', 'city' => 'Москва'];
+
+
+// var_dump($arr);
 
 
 // $dataHandler->insert($filePath,[ // Done
@@ -87,12 +113,14 @@ $rows = $dataHandler->select([]); // Done
 
 <table>
   <?php foreach ($rows as $row): ?>
+    <?php foreach ($row as $value):?>
     <tr>
-      <td><?= htmlspecialchars($row['name']) ?></td>
-      <td><?= htmlspecialchars($row['phone']) ?></td>
-      <td><?= htmlspecialchars($row['email']) ?></td>
-      <td><?= htmlspecialchars($row['city']) ?></td>
+      <td><?= htmlspecialchars($value['name']) ?></td>
+      <td><?= htmlspecialchars($value['phone']) ?></td>
+      <td><?= htmlspecialchars($value['email']) ?></td>
+      <td><?= htmlspecialchars($value['city']) ?></td>
     </tr>
+    <?php endforeach?>
   <?php endforeach ?>
 </table>
 

@@ -4,6 +4,12 @@ class DataHandler {
     private $fp;
     private $fileName;
 
+    private $match_result = [];
+    private $match_operator = 'operator';
+    private $valid_operator = ['and', 'or'];
+    private $valid_operator_flag;
+
+
 
     public function __construct($fileName)
     {
@@ -13,7 +19,7 @@ class DataHandler {
     
     private function checkFileName(string $fileName):string {
         if(!file_exists($fileName)){
-            throw new Exception("File in: " . __DIR__ .'/'. $fileName . " not found. Error in DataHandler.php/16");
+            throw new Exception("File in: " . __DIR__ .'/'. $fileName . " not found.");
         }
         return $fileName;
     }
@@ -22,6 +28,44 @@ class DataHandler {
         $keys = ['name', 'phone', 'email', 'city'];
         $processedRow = array_combine($keys, explode(' ', $row));
         return $processedRow;
+    }
+
+
+    private function and($compare){
+        return true && $compare;
+    }
+
+    private function or($compare){
+        return false || $compare;
+    }
+
+    private function match($filter, $combinedRow): bool {
+            $this->match_result = [];
+            foreach($filter as $key => $value) {
+                if($key == $this->match_operator) continue;
+                
+                $operator = trim($filter[$this->match_operator]);
+
+                foreach($this->valid_operator as $operator_value) {
+                    $this->valid_operator_flag = false;
+                    if($operator_value == $operator){
+                        $this->valid_operator_flag = true;
+                        break;
+                    }
+                }
+
+                if($this->valid_operator_flag){
+                    $result = $this->$operator(trim($combinedRow[$key]) == trim($value));
+                }
+                else
+                {
+                    throw new Exception("Your operator: $operator is not valid");
+                }
+                
+                if($operator == 'and' && !$result) break;
+            }
+        if($result) array_push($this->match_result, $combinedRow);
+        return $result;
     }
 
     public function select($filter){
@@ -35,12 +79,15 @@ class DataHandler {
         {
             while ($row = fgets($this->fp)) { 
                 $combinedRow = $this->combine($row);
-                foreach ($filter as $key => $value) {
-                    $value = trim($value);
-                    if($combinedRow[$key] == $value) {
-                        array_push($processedData, $combinedRow);
-                    }
+
+                for($i = 0; $i < count($filter); $i++) {
+
+                    if($this->match($filter[$i], $combinedRow)) {
+                        array_push($processedData, $this->match_result);
+                    } 
                 }
+                
+
             }
         }
         return $processedData;
