@@ -61,13 +61,14 @@ try {
     [
       'name'=>'Egor', 
       'operator' => 'and', 
-      'city' => 'Москва'
+      'city' => 'Екатеринбург'
     ],
+    'operator' => 'or',  
     [
       'name'=>'Семён', 
       'operator' => 'or', 
-      'city' => 'Екатеринбург' 
-    ]
+      'city' => 'Владимир' 
+    ],
   ]); 
 } 
 catch (Exception $e) 

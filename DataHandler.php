@@ -9,6 +9,9 @@ class DataHandler {
     private $valid_operator = ['and', 'or'];
     private $valid_operator_flag;
 
+    private $select_filter_keys = [];
+
+
 
 
     public function __construct($fileName)
@@ -63,8 +66,11 @@ class DataHandler {
                 }
                 
                 if($operator == 'and' && !$result) break;
+                
             }
-        if($result) array_push($this->match_result, $combinedRow);
+
+        if($result) $this->match_result = $combinedRow; // Исправлен пуш
+
         return $result;
     }
 
@@ -77,17 +83,44 @@ class DataHandler {
         } 
         else 
         {
+            foreach($filter as $key => $value) {
+                if($key == $this->match_operator) {
+                    $this->select_filter_keys[$key] = $value;
+                }
+                if($key == $this->match_operator) continue;
+                array_push($this->select_filter_keys, []);
+            }
+
+
             while ($row = fgets($this->fp)) { 
                 $combinedRow = $this->combine($row);
 
-                for($i = 0; $i < count($filter); $i++) {
-
-                    if($this->match($filter[$i], $combinedRow)) {
-                        array_push($processedData, $this->match_result);
+                foreach($filter as $key => $value) {
+                    if($key == $this->match_operator) continue;
+                    
+                    if($this->match($filter[$key], $combinedRow)) {
+                        array_push($this->select_filter_keys[$key], $this->match_result);
                     } 
+                }  
+            }
+            $i = 0;
+            foreach($this->select_filter_keys as $key => $value) {
+                if($key != 'operator') {
+                    $i = $key;
                 }
-                
-
+                if($key == 'operator' && $value == 'and') {
+                    
+                    if($this->select_filter_keys[$i] == [] || $this->select_filter_keys[$i+1] == []){
+                        continue;
+                    }elseif($this->select_filter_keys[$i] != [] || $this->select_filter_keys[$i+1] != []) {
+                        $processedData[$i] = $this->select_filter_keys[$i];
+                        $processedData[$i+1] = $this->select_filter_keys[$i+1];
+                    }
+                }
+                else if($key == 'operator' && $value == 'or') {
+                    $processedData[$i] = $this->select_filter_keys[$i];
+                    $processedData[$i+1] = $this->select_filter_keys[$i+1];
+                }
             }
         }
         return $processedData;

@@ -4,4 +4,4 @@
 Egor 123 egor@test4.com Сочи
 Egor 89005558423 egor@test5.com Москва
 Egor 89005558423 egor@test5.com Екатеринбург
-Семён 88004444044 test6@test.ru Екатеринбург
+Семён 88004444044 test6@test.ru Владимир
