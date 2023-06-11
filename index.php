@@ -55,30 +55,22 @@ catch (Exception $e)
 //     'email' => 'egor@test4.com',
 //     'city' => 'Москва'
 // ]);
-try {
+
   $rows = $dataHandler->select(
-    [
-    [
-      'name'=>'Egor', 
-      'operator' => 'and', 
-      'city' => 'Екатеринбург'
+  [
+    'operator' => 'or',
+    'left' => [
+        'operator' => '=',
+        'left' => 'name',
+        'right' => 'Egor',
     ],
-    'operator' => 'or',  
-    [
-      'name'=>'Семён', 
-      'operator' => 'or', 
-      'city' => 'Владимир' 
+    'right' => [
+        'operator' => '=',
+        'left' => 'city',
+        'right' => 'Москва',
     ],
-  ]); 
-} 
-catch (Exception $e) 
-{
-  echo $e->getMessage();
-  die();
-}
+]); 
 
-
-// var_dump($rows);
 
 // $arr = ['name'=>'Egor', 'city' => 'Москва'];
 
@@ -114,14 +106,14 @@ catch (Exception $e)
 
 <table>
   <?php foreach ($rows as $row): ?>
-    <?php foreach ($row as $value):?>
+
     <tr>
-      <td><?= htmlspecialchars($value['name']) ?></td>
-      <td><?= htmlspecialchars($value['phone']) ?></td>
-      <td><?= htmlspecialchars($value['email']) ?></td>
-      <td><?= htmlspecialchars($value['city']) ?></td>
+      <td><?= htmlspecialchars($row['name']) ?></td>
+      <td><?= htmlspecialchars($row['phone']) ?></td>
+      <td><?= htmlspecialchars($row['email']) ?></td>
+      <td><?= htmlspecialchars($row['city']) ?></td>
     </tr>
-    <?php endforeach?>
+
   <?php endforeach ?>
 </table>
 
